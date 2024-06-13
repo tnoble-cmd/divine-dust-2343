@@ -1,8 +1,8 @@
 # Field Trip
 
-This repository requires and has been tested on Ruby v3.1.1 and is based on Rails 7.0.5.
+This repository requires and has been tested on Ruby v3.2.2 and is based on Rails 7.1.3.
 
-RSpec and Shoulda-Matchers have been installed and set up.
+**RSpec** and **Shoulda-Matchers** have been installed and set up.
 
 ## Setup
 
