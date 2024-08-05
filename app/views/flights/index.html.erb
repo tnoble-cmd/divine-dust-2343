@@ -1,6 +1,7 @@
 <h1> Flight Index Page </h1>
 <div id = "flight-info-list">
     <% @flights.each do |flight| %>
+    <div id = "flight-<%= flight.id %>">
         <ul>
             <li>Flight Number: <%= flight.number %></p> - Airline: <%= flight.airline.name %></li>
         </ul>
@@ -10,5 +11,6 @@
                 <%= link_to "Remove Passenger", flight_flight_passenger_path(flight, passenger), method: :delete, class: 'remove-passenger' %>
             <% end %>
         </ul>
+    </div>
     <% end %>
 </div>

@@ -15,6 +15,7 @@ RSpec.describe 'flights index page' do
 
     FlightPassenger.create!(flight_id: @flight.id, passenger_id: @passenger_1.id)
     FlightPassenger.create!(flight_id: @flight.id, passenger_id: @passenger_2.id)
+    FlightPassenger.create!(flight_id: @flight_2.id, passenger_id: @passenger_1.id)
     FlightPassenger.create!(flight_id: @flight_2.id, passenger_id: @passenger_3.id)
     FlightPassenger.create!(flight_id: @flight_2.id, passenger_id: @passenger_4.id)
 
@@ -23,53 +24,43 @@ RSpec.describe 'flights index page' do
   it 'can see a list of all flight required flight info US1' do
     visit flights_path
 
-    within "#flight-info-list" do
+    within "#flight-#{@flight.id}" do
       expect(page).to have_content(@flight.number)
-      expect(page).to have_content(@flight_2.number)
+
+      expect(page).to have_content(@airline.name)
 
       expect(page).to have_content(@passenger_1.name)
       expect(page).to have_content(@passenger_2.name)
+      
+      expect(page).to_not have_content(@passenger_3.name)
+      expect(page).to_not have_content(@passenger_4.name)
+    end
+
+    within "#flight-#{@flight_2.id}" do
+      expect(page).to have_content(@flight_2.number)
+
+      expect(page).to have_content(@airline_2.name)
+
+      expect(page).to have_content(@passenger_1.name)
       expect(page).to have_content(@passenger_3.name)
       expect(page).to have_content(@passenger_4.name)
-
-      expect(page).to have_content(@airline.name)
-      expect(page).to have_content(@airline_2.name)
+      expect(page).to_not have_content(@passenger_2.name)
     end
   end
 
-  it 'can remove a passenger from a flight US2' do
+  it 'can remove a passenger from a flight and they will still be listed under the other flights US2' do
     visit flights_path
 
-    within "#flight-info-list" do
-      expect(page).to have_content(@passenger_1.name)
-      expect(page).to have_content(@passenger_2.name)
-      expect(page).to have_content(@passenger_3.name)
-      expect(page).to have_content(@passenger_4.name)
-
-      expect(page).to have_content(@flight.number)
-      expect(page).to have_content(@flight_2.number)
-
-      expect(page).to have_content(@airline.name)
-      expect(page).to have_content(@airline_2.name)
-    end
-
-    within "#flight-info-list" do
+    #Passenger 1 is on both flights, clicking remove passenger 1 from flight 1 should still show passenger 1 on flight 2
+    within "#flight-#{@flight.id}" do
       first('.remove-passenger').click
-    end
-
-    expect(current_path).to eq(flights_path)
-
-    within "#flight-info-list" do
-      expect(page).to have_content(@flight.number)
-      expect(page).to have_content(@flight_2.number)
-
       expect(page).to_not have_content(@passenger_1.name)
-      expect(page).to have_content(@passenger_2.name)
-      expect(page).to have_content(@passenger_3.name)
-      expect(page).to have_content(@passenger_4.name)
-
-      expect(page).to have_content(@airline.name)
-      expect(page).to have_content(@airline_2.name)
     end
+
+    within "#flight-#{@flight_2.id}" do
+      expect(page).to have_content(@passenger_1.name)
+    end
+
+    
   end
 end
