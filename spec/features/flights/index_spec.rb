@@ -36,4 +36,40 @@ RSpec.describe 'flights index page' do
       expect(page).to have_content(@airline_2.name)
     end
   end
+
+  it 'can remove a passenger from a flight US2' do
+    visit flights_path
+
+    within "#flight-info-list" do
+      expect(page).to have_content(@passenger_1.name)
+      expect(page).to have_content(@passenger_2.name)
+      expect(page).to have_content(@passenger_3.name)
+      expect(page).to have_content(@passenger_4.name)
+
+      expect(page).to have_content(@flight.number)
+      expect(page).to have_content(@flight_2.number)
+
+      expect(page).to have_content(@airline.name)
+      expect(page).to have_content(@airline_2.name)
+    end
+
+    within "#flight-info-list" do
+      first('.remove-passenger').click
+    end
+
+    expect(current_path).to eq(flights_path)
+
+    within "#flight-info-list" do
+      expect(page).to have_content(@flight.number)
+      expect(page).to have_content(@flight_2.number)
+
+      expect(page).to_not have_content(@passenger_1.name)
+      expect(page).to have_content(@passenger_2.name)
+      expect(page).to have_content(@passenger_3.name)
+      expect(page).to have_content(@passenger_4.name)
+
+      expect(page).to have_content(@airline.name)
+      expect(page).to have_content(@airline_2.name)
+    end
+  end
 end
